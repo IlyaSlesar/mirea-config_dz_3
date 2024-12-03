@@ -18,7 +18,7 @@
 git clone https://github.com/IlyaSlesar/mirea-config_dz_3.git
 cd mirea-config_dz_3
 pip install -r requirements.txt
-python converter.py --input путь_к_входному_файлу.toml --output путь_к_выходному_файлу
+python src/Interpreter.py -i путь_к_входному_файлу.toml -o путь_к_выходному_файлу
 ```
 
 ## Описание всех функций и настроек
@@ -30,14 +30,10 @@ python converter.py --input путь_к_входному_файлу.toml --outpu
 ### Пример
 
 ```bash
-python converter.py --input example.toml --output result.txt
+python src/Interpreter.py --input example.toml --output result.txt
 ```
 
 ### Структура учебного конфигурационного языка
-
-- **Комментарии**:
-  - Однострочные: `\ Это комментарий`
-  - Многострочные: `/+ Это многострочный комментарий +/`
   
 - **Типы данных**:
   - Числа: `42`, `3.14`.
@@ -58,6 +54,10 @@ python converter.py --input example.toml --output result.txt
     - `/` (деление),
     - `concat()` (конкатенация строк),
     - `sort()` (сортировка массивов).
+
+- **Комментарии**:
+  - Однострочные: `\ Это комментарий`
+  - Многострочные: `/+ Это многострочный комментарий +/`
 
 ## Примеры использования в виде скриншотов
 
