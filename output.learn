@@ -1,10 +1,15 @@
 var constants = {
 var a = 5
 var b = 3
-result = list([3, 5])
+var result = list(3, 5)
+var pi = 3.14159
+var radius = 5
+}
+var formulas = {
+var circumference = 31.4159
 }
 var sensors = {
-var types = list(temperature, humidity, pressure)
+var types = list(@"temperature", @"humidity", @"pressure")
 var interval = 60
 }
 var network = {

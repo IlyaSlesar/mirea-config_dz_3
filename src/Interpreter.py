@@ -5,7 +5,6 @@ import toml
 def evaluate_expression(expression, constants):
     stack = []
     tokens = expression.split()
-    print(tokens)
     for token in tokens:
         if token.isdigit():
             stack.append(int(token))
@@ -25,10 +24,28 @@ def evaluate_expression(expression, constants):
             elif token == 'concat()':
                 stack.append(str(a) + str(b))
             elif token == 'sort()':
-                stack.append('list(' + str(sorted([a, b])) + ')')
+                stack.append('list(' + ', '.join(map(str, sorted([a, b]))) + ')')
         else:
             raise ValueError(f"Unknown token in expression: {token}")
     return stack[0]
+
+def transform_list(list_in, constants = None):
+    for i in range(len(list_in)):
+        if isinstance(list_in[i], dict):  # Рекурсивная обработка
+            list_in[i] = '{\n' + transform_to_custom_language(list_in[i], constants) + '\n}'
+        if isinstance(list_in[i], list):
+            list_in[i] = transform_list(list_in[i])
+        elif str(list_in[i]).startswith('?['):
+            expression = str(list_in[i][2:-1]).strip()
+            computed_value = evaluate_expression(expression, constants)
+            list_in[i] = computed_value
+        elif isinstance(list_in[i], str):
+            list_in[i] = f'@"{list_in[i]}"'
+        elif isinstance(list_in[i], (int, float)):
+            list_in[i] = str(list_in[i])
+        else:
+            raise ValueError(f"Unsupported data type for list item: {list_in[i]}")
+    return "list(" + ', '.join(list_in) + ")"
 
 # Трансформация данных
 def transform_to_custom_language(data, constants=None):
@@ -36,18 +53,16 @@ def transform_to_custom_language(data, constants=None):
         constants = {}
     result = []
     for key, value in data.items():
-        print(key, value)
         if isinstance(value, dict):  # Рекурсивная обработка
             result.append(f"var {key} = {{")
             result.append(transform_to_custom_language(value, constants))
             result.append("}")
         elif isinstance(value, list):  # Обработка массивов
-            items = ', '.join(map(str, value))
-            result.append(f"var {key} = list({items})")
-        elif str(value).startswith("?"):  # Выражения
+            result.append(f"var {key} = {transform_list(value, constants)}")
+        elif str(value).startswith("?["):  # Выражения
             expression = value[2:-1].strip()
             computed_value = evaluate_expression(expression, constants)
-            result.append(f"{key} = {computed_value}")
+            result.append(f"var {key} = {computed_value}")
         elif isinstance(value, str):  # Обработка строк
             result.append(f'var {key} = @"{value}"')
         elif isinstance(value, (int, float)):  # Числа

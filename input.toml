@@ -2,6 +2,11 @@
 a = 5
 b = 3
 result = "?[a b sort()]"
+pi = 3.14159
+radius = 5
+
+[formulas]
+circumference = "?[radius pi * 2 *]"
 
 [sensors]
 types = ["temperature", "humidity", "pressure"]
