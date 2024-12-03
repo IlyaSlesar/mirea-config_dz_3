@@ -1,0 +1,19 @@
+[constants]
+a = 5
+b = 3
+result = "?[a b sort()]"
+
+[sensors]
+types = ["temperature", "humidity", "pressure"]
+interval = 60
+
+[network]
+ip = "192.168.0.1"
+timeout = 300
+
+[database]
+host = "localhost"
+port = 5432
+
+[logging]
+level = "debug"
